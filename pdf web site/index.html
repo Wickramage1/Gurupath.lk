@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gurupath.lk</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      header {
+        background: #2c3e50;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .search-container {
+        padding: 2rem;
+        background: #ecf0f1;
+        text-align: center;
+      }
+
+      #search-input {
+        padding: 0.5rem;
+        width: 80%;
+        max-width: 500px;
+        border: 1px solid #bdc3c7;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+      }
+
+      .book-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        text-align: center;
+      }
+
+      .book-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .book-cover {
+        width: 150px;
+        height: 200px;
+        object-fit: cover;
+        margin: 1rem auto;
+        border-radius: 4px;
+      }
+
+      .book-title {
+        font-size: 1.2rem;
+        margin: 0.5rem;
+        color: #2c3e50;
+      }
+
+      .book-author {
+        color: #7f8c8d;
+        margin-bottom: 0.5rem;
+      }
+
+      .download-btn {
+        background: #006eff;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-bottom: 1rem;
+        text-decoration: none; /* Added this line */
+      }
+
+      .download-btn:hover {
+        background: #004979;
+      }
+
+      footer {
+        background: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .toast-notification {
+        position: fixed;
+        bottom: 60px;
+        right: 20px;
+        background: #2ecc71;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transform: translateY(150%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+      }
+
+      .toast-notification.show {
+        transform: translateY(0);
+      }
+
+      .toast-notification.error {
+        background: #e74c3c;
+      }
+
+      @media (max-width: 768px) {
+        .books-grid {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Gurupath.lk</h1>
+      <p> Free Model Paper Download Center</p>
+    </header>
+
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search for books..." />
+    </div>
+
+    <div class="books-grid" id="books-container">
+      <!-- Books will be dynamically added here -->
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast">
+      <!-- Notification message will be inserted here -->
+    </div>
+
+    <footer>
+      <h3>මෙවැනි ප්‍රශ්න පත්‍ර නොමිලේම බාගත කර ගැනීමට අප හා රැදී සිටින්න..</h3>
+      <p>&copy; 2025 Gihan Wickramage. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Sample books data
+      const books = [
+        {
+          title: "2025 O/L Maths (Part-A)",
+          author: "ඌව පලාත් අධ්‍යාපන දෙපාර්තමේන්තුව",
+          cover: "covers/uwa_maths.jpg",
+          downloadUrl: "https://drive.google.com/file/d/19q2ERMt_djdbqzaI6QHTBUDbDYsFdc-h/view?usp=sharing",
+        },
+        {
+          title: "Sinhala Language And Literature (Part-01)",
+          author: "Royall college",
+          cover: "covers/royal.jpg",
+          downloadUrl: "https://drive.google.com/file/d/1IsszqsGjgoHI9VS46GXR-vBgEqa3uWK-/view?usp=sharing",
+        },
+        {
+          title: "Sinhala Language And Literature (Part-03)",
+          author: "   Royall college    "  ,  
+          cover: "covers/3royal.jpg",
+          downloadUrl: "https://drive.google.com/file/d/1IBXyDNT37PoS--fP7G9HbEEsEPxfKqnK/view?usp=sharing",
+        },
+        {
+        
+          title: "2025 O/L Maths",
+          author: "Channel NIE",
+          cover: "covers/nie.jpg",
+          downloadUrl: "https://drive.google.com/file/d/1DG5QygaTRjxWcQpCqe5463Mv92d-l7l-/view?usp=sharing",
+        },
+        {
+          title: "2025 O/L Art Paper (PArt-01)",
+          author: "බස්නාහිර පළාත් අධ්‍යාපන දෙපාර්තමේන්තුව",
+          cover: "covers/histry.jpg",
+          downloadUrl: "https://drive.google.com/file/d/1cdJ258BVhOrnO5MrD8LBBfEvwM8e6zN4/view?usp=sharing0",
+        }
+       
+      ];
+
+      // Toast notification function
+      function showToast(message, isError = false) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.className = "toast-notification" + (isError ? " error" : "");
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      // Function to create book cards
+      function createBookCard(book) {
+        return `
+          <div class="book-card">
+              <img src="${book.cover}" alt="${book.title}" class="book-cover">
+              <h3 class="book-title">${book.title}</h3>
+              <p class="book-author">${book.author}</p>
+              <a href="${book.downloadUrl}" class="download-btn" target="_blank">Download</a>
+          </div>
+        `;
+      }
+
+      // Function to display books
+      function displayBooks(booksToShow) {
+        const container = document.getElementById("books-container");
+        container.innerHTML = booksToShow
+          .map((book) => createBookCard(book))
+          .join("");
+      }
+
+      // Search functionality
+      const searchInput = document.getElementById("search-input");
+      searchInput.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredBooks = books.filter(
+          (book) =>
+            book.title.toLowerCase().includes(searchTerm) ||
+            book.author.toLowerCase().includes(searchTerm)
+        );
+        displayBooks(filteredBooks);
+      });
+
+      // Initial display
+      displayBooks(books);
+    </script>
+  </body>
+</html>
